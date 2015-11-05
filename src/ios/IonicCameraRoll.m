@@ -10,8 +10,10 @@
  */
 
 #import "IonicCameraRoll.h"
+#import <Cordova/CDV.h>
 #import <AssetsLibrary/ALAssetRepresentation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @implementation IonicCameraRoll
 
@@ -88,6 +90,65 @@
       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
   }];
+
+}
+
+-(void)find:(CDVInvokedUrlCommand*)command {
+    
+    NSInteger max = [[command.arguments objectAtIndex:0] integerValue];
+    
+    NSMutableArray *photos = [[NSMutableArray alloc] init];
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                           usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                               if (group == nil) {
+                                   return;
+                               }
+                               [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+                               
+//                               if ([group numberOfAssets] > 0) {
+                               
+//                               [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *innerStop) {
+                               
+                               
+//                               [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:[group numberOfAssets]-max]
+//                                                       options:0
+//                                                    usingBlock:^(ALAsset *result, NSUInteger index, BOOL *innerStop) {
+                                 [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *innerStop) {
+                               
+                                   if (result == nil) {
+                                       return;
+                                   }
+                                   NSURL *urld = (NSURL*) [[result defaultRepresentation]url];
+                                   // NSData *imageData = [NSData dataWithContentsOfURL:urld];
+                                   // NSString *base64EncodedImage = [imageData base64EncodedString];
+                                   
+                                   //[photos addObject:base64EncodedImage];
+                                   //if(urld != nil){
+                                       [photos addObject:urld.absoluteString];
+                                       if (photos.count >= max) {
+                                           *innerStop = YES;
+                                           *stop = YES;
+                                       }
+                                   //}
+                               }];
+                               
+                               if (photos.count > 0) {
+                                   CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:photos];
+                                   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                               } else {
+                                   CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                                   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                               }
+                               
+                           } failureBlock:^(NSError *error) {
+                               NSLog(@"%@", [error localizedDescription]);
+                               CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+                               [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                           }];
+
+
+
 
 }
 

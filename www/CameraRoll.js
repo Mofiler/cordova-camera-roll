@@ -10,4 +10,17 @@ cameraRoll.saveToCameraRoll = function(imageBase64, successCallback, errorCallba
   exec(successCallback, errorCallback, "CameraRoll", "saveToCameraRoll", [imageBase64]);
 };
 
+cameraRoll.find = function (max, successCallback, errorCallback) {
+    if (typeof errorCallback != "function") {
+        console.log("CameraRoll.find failure: errorCallback parameter must be a function");
+        return
+    }
+
+    if (typeof successCallback != "function") {
+        console.log("CameraRoll.find failure: successCallback parameter must be a function");
+        return
+    }
+    cordova.exec(successCallback, errorCallback, "CameraRoll", "find", [max]);
+};
+
 module.exports = cameraRoll;
