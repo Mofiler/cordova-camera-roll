@@ -30,9 +30,13 @@
   
 - (void)saveToCameraRoll:(CDVInvokedUrlCommand*)command
 {
-  NSString *base64String = [command argumentAtIndex:0];
-  NSURL *url = [NSURL URLWithString:base64String];    
-  NSData *imageData = [NSData dataWithContentsOfURL:url];
+//  NSURL *url = [NSURL URLWithString:base64String];    
+//  NSData *imageData = [NSData dataWithContentsOfURL:url];
+//  UIImage *image = [UIImage imageWithData:imageData];
+    
+  NSData* imageData = [NSData dataFromBase64String:base64String];
+    
+//    UIImage* image = [[UIImage alloc] initWithData:imageData];
   UIImage *image = [UIImage imageWithData:imageData];
 
   // save the image to photo album
