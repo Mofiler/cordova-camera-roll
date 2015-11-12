@@ -30,6 +30,7 @@
   
 - (void)saveToCameraRoll:(CDVInvokedUrlCommand*)command
 {
+  NSString *base64String = [command argumentAtIndex:0];
 //  NSURL *url = [NSURL URLWithString:base64String];    
 //  NSData *imageData = [NSData dataWithContentsOfURL:url];
 //  UIImage *image = [UIImage imageWithData:imageData];
