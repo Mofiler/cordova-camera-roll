@@ -14,6 +14,7 @@
 #import <AssetsLibrary/ALAssetRepresentation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <NSData+Base64.h>
 
 @implementation IonicCameraRoll
 
@@ -35,7 +36,9 @@
 //  NSData *imageData = [NSData dataWithContentsOfURL:url];
 //  UIImage *image = [UIImage imageWithData:imageData];
     
-  NSData* imageData = [NSData dataFromBase64String:base64String];
+  // NSData* imageData = [NSData dataFromBase64String:base64String];
+  NSData* imageData = [NSData dataWithBase64EncodedString:base64String];
+  
     
 //    UIImage* image = [[UIImage alloc] initWithData:imageData];
   UIImage *image = [UIImage imageWithData:imageData];
