@@ -37,7 +37,7 @@
 //  UIImage *image = [UIImage imageWithData:imageData];
     
   // NSData* imageData = [NSData dataFromBase64String:base64String];
-  NSData* imageData = [NSData cdv_dataFromBase64String:base64String];
+  NSData* imageData = [[NSData alloc] initWithBase64EncodedString:base64String options:0]
   
   // NSData* imageData = [NSData dataWithBase64EncodedString:base64String];
   
