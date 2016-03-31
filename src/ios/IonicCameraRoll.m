@@ -129,18 +129,41 @@
                                    if (result == nil) {
                                        return;
                                    }
-                                   NSURL *urld = (NSURL*) [[result defaultRepresentation]url];
-                                   // NSData *imageData = [NSData dataWithContentsOfURL:urld];
-                                   // NSString *base64EncodedImage = [imageData base64EncodedString];
+
+
+                                     
+//                                     NSString* url = [[result valueForProperty:ALAssetPropertyAssetURL] absoluteString];
+//                                     CGImageRef thumbnailImageRef = [result thumbnail];
+                                     ALAssetRepresentation *representation = [result defaultRepresentation];
+                                     CGImageRef thumbnailImageRef = [representation fullScreenImage];
+                                     UIImage* thumbnail = [UIImage imageWithCGImage:thumbnailImageRef];
+                                     NSString* base64encoded = [UIImageJPEGRepresentation(thumbnail, 1) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+//                                     NSData *imageData = [NSData dataWithContentsOfURL:url];
+                                     
+                                     //ALAssetRepresentation *representation = [result defaultRepresentation];
+                                     //UIImage *latestPhoto = [UIImage imageWithCGImage:[representation fullScreenImage]];
+
+                                     
+//                                     NSString* base64encoded = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+//                                     NSDictionary* photo = @{
+//                                                             @"url": url,
+//                                                             @"base64encoded": base64encoded
+//                                                             };
+                                     base64encoded = [@"data:image/jpg;base64," stringByAppendingString:base64encoded];
+                                     
+                                     [photos addObject:base64encoded];
+                                     
+                                     
+//                                     NSURL *urld = (NSURL*) [[result defaultRepresentation]url];
+//                                     NSData *imageData = [NSData dataWithContentsOfURL:urld];
+//                                     NSString *base64EncodedImage = [imageData base64EncodedStringWithOptions:kNilOptions];
                                    
-                                   //[photos addObject:base64EncodedImage];
-                                   //if(urld != nil){
-                                       [photos addObject:urld.absoluteString];
-                                       if (photos.count >= max) {
-                                           *innerStop = YES;
-                                           *stop = YES;
-                                       }
-                                   //}
+//                                     [photos addObject:base64EncodedImage];
+//                                     [photos addObject:urld.absoluteString];
+                                     if (photos.count >= max) {
+                                         *innerStop = YES;
+                                         *stop = YES;
+                                     }
                                }];
                                
                                if (photos.count > 0) {
