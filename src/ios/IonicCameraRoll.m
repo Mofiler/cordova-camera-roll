@@ -103,6 +103,42 @@
 
 }
 
+
+- (void)getOriginalImage:(CDVInvokedUrlCommand*)command
+//- (void)getOriginalImage:(NSString*)url
+{
+    NSLog(@"getOriginalImage");
+    NSURL* assetUrl = [NSURL URLWithString:[command.arguments objectAtIndex:0]];
+//    NSURL* assetUrl = [NSURL URLWithString:url];
+    //NSLog(assetUrl.absoluteString);
+    
+    // Grab the asset library
+    ALAssetsLibrary *library = [IonicCameraRoll defaultAssetsLibrary];
+    
+    
+    [library assetForURL:assetUrl resultBlock:^(ALAsset *asset) {
+        CDVPluginResult *pluginResult = nil;
+        
+        UIImage *orgImg = [UIImage imageWithCGImage:[[asset defaultRepresentation ] fullScreenImage]];
+        
+        //orgImg = [orgImg imageCorrectedForCaptureOrientation];
+    
+        NSString *orgDataUrl = [UIImageJPEGRepresentation(orgImg, 0.9) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        
+//        UIImage *imageToDisplay = [UIImage imageWithCGImage:[orgImg CGImage] scale:[orgImg scale] orientation: UIImageOrientationDown];
+//        NSString *orgDataUrl = [UIImageJPEGRepresentation(imageToDisplay, 0.9) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:orgDataUrl];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        
+        
+    } failureBlock:^(NSError *error) {
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+
 -(void)find:(CDVInvokedUrlCommand*)command {
     
     NSInteger max = [[command.arguments objectAtIndex:0] integerValue];
